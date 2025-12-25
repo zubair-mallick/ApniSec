@@ -6,10 +6,7 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  experimental: {
-    isrMemoryCacheSize: 0,
-  },
-  staticPageGenerationTimeout: 0,
+  staticPageGenerationTimeout: 120,
 };
 
 export default nextConfig;
