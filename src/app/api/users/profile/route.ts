@@ -4,10 +4,18 @@ import { UserService } from '@/backend/services/UserService';
 import { UserRepository } from '@/backend/repositories/UserRepository';
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+let prisma: PrismaClient;
+
+function getPrismaClient() {
+  if (!prisma) {
+    prisma = new PrismaClient();
+  }
+  return prisma;
+}
 
 function getUserHandler() {
-  const userRepository = new UserRepository(prisma);
+  const prismaInstance = getPrismaClient();
+  const userRepository = new UserRepository(prismaInstance);
   const userService = new UserService(userRepository);
   return new UserHandler(userService);
 }
