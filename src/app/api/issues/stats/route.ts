@@ -5,6 +5,8 @@ import { IssueService } from '@/backend/services/IssueService';
 import { IssueRepository } from '@/backend/repositories/IssueRepository';
 import { IssueValidator } from '@/backend/validators/IssueValidator';
 
+export const dynamic = 'force-dynamic';
+
 let prisma: PrismaClient;
 
 function getPrismaClient() {

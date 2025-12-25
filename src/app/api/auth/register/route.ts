@@ -8,6 +8,8 @@ import { AuthValidator } from '@/backend/validators/AuthValidator';
 import { RateLimiter } from '@/backend/utils/RateLimiter';
 import { PrismaClient } from '@prisma/client';
 
+export const dynamic = 'force-dynamic';
+
 let prisma: PrismaClient;
 
 function getPrismaClient() {

@@ -4,6 +4,8 @@ import { UserService } from '@/backend/services/UserService';
 import { UserRepository } from '@/backend/repositories/UserRepository';
 import { PrismaClient } from '@prisma/client';
 
+export const dynamic = 'force-dynamic';
+
 let prisma: PrismaClient;
 
 function getPrismaClient() {
