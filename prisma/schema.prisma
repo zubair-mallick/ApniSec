@@ -19,4 +19,22 @@ model User {
   email     String   @unique
   password  String
   createdAt DateTime @default(now())
+  issues    Issue[]
+}
+
+model Issue {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String   // "Cloud Security", "Reteam Assessment", "VAPT"
+  title       String
+  description String   @db.Text
+  priority    String   @default("medium") // "low", "medium", "high", "critical"
+  status      String   @default("open") // "open", "in-progress", "resolved", "closed"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([type])
+  @@index([status])
 }

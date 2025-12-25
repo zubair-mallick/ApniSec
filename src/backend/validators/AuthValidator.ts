@@ -18,12 +18,10 @@ export class AuthValidator {
   }
 
   validateRegister(data: unknown): { name: string; email: string; password: string } {
-    // TODO: Implement in Phase-2
-    throw new Error('Not implemented');
+    return this.registerSchema.parse(data) as { name: string; email: string; password: string };
   }
 
   validateLogin(data: unknown): { email: string; password: string } {
-    // TODO: Implement in Phase-2
-    throw new Error('Not implemented');
+    return this.loginSchema.parse(data) as { email: string; password: string };
   }
 }

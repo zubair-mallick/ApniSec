@@ -3,7 +3,7 @@ export class RateLimiter {
   private maxRequests: number;
   private windowMs: number;
 
-  constructor(maxRequests: number = 5, windowMs: number = 60000) {
+  constructor(maxRequests: number = 100, windowMs: number = 900000) { // 100 requests per 15 minutes
     this.requests = new Map();
     this.maxRequests = maxRequests;
     this.windowMs = windowMs;
@@ -41,5 +41,19 @@ export class RateLimiter {
     const requests = this.requests.get(identifier) || [];
     const recentRequests = requests.filter(time => now - time < this.windowMs);
     return Math.max(0, this.maxRequests - recentRequests.length);
+  }
+
+  getResetTime(identifier: string): number {
+    const requests = this.requests.get(identifier) || [];
+    if (requests.length === 0) return Date.now() + this.windowMs;
+    return requests[0] + this.windowMs;
+  }
+
+  getRateLimitHeaders(identifier: string) {
+    return {
+      'X-RateLimit-Limit': this.maxRequests.toString(),
+      'X-RateLimit-Remaining': this.getRemainingRequests(identifier).toString(),
+      'X-RateLimit-Reset': Math.ceil(this.getResetTime(identifier) / 1000).toString()
+    };
   }
 }

@@ -2,17 +2,18 @@ import bcrypt from 'bcrypt';
 import { UserRepository } from '../repositories/UserRepository';
 import { JwtUtil } from '../utils/JwtUtil';
 import { EmailUtil } from '../utils/EmailUtil';
+import { AppError } from '../errors/AppError';
 
 export class AuthService {
   private userRepository: UserRepository;
   private jwtUtil: JwtUtil;
-  private emailUtil: EmailUtil;
+  private emailUtil: any;
   private saltRounds: number;
 
   constructor(
     userRepository: UserRepository,
     jwtUtil: JwtUtil,
-    emailUtil: EmailUtil,
+    emailUtil: any,
     saltRounds: number = 10
   ) {
     this.userRepository = userRepository;
@@ -25,7 +26,7 @@ export class AuthService {
     // Check if user already exists
     const existingUser = await this.userRepository.findUserByEmail(email);
     if (existingUser) {
-      throw new Error('Email already registered');
+      throw new AppError('Email already registered', 400);
     }
 
     // Hash password
@@ -39,7 +40,7 @@ export class AuthService {
     });
 
     // Send welcome email
-    await EmailUtil.sendWelcomeEmail(email, name);
+    await this.emailUtil.sendWelcomeEmail(email, name);
 
     // Generate JWT token
     const token = JwtUtil.sign({ id: user.id, email: user.email });
@@ -58,13 +59,13 @@ export class AuthService {
     // Find user by email
     const user = await this.userRepository.findUserByEmail(email);
     if (!user) {
-      throw new Error('Invalid credentials');
+      throw new AppError('Invalid credentials', 401);
     }
 
     // Compare password
     const isValidPassword = await this.comparePassword(password, user.password);
     if (!isValidPassword) {
-      throw new Error('Invalid credentials');
+      throw new AppError('Invalid credentials', 401);
     }
 
     // Generate JWT token
@@ -83,7 +84,7 @@ export class AuthService {
   async getUserById(userId: string): Promise<any> {
     const user = await this.userRepository.findUserById(userId);
     if (!user) {
-      throw new Error('User not found');
+      throw new AppError('User not found', 404);
     }
 
     return {

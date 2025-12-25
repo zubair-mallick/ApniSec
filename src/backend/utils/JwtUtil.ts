@@ -1,26 +1,18 @@
 import jwt from 'jsonwebtoken';
+import { AppError } from '../errors/AppError';
 
 export class JwtUtil {
-  private secret: string;
-  private expiresIn: string;
-
-  constructor(secret?: string, expiresIn: string = '7d') {
-    this.secret = secret || process.env.JWT_SECRET || '';
-    this.expiresIn = expiresIn;
+  static sign(payload: object): string {
+    const secret = process.env.JWT_SECRET || 'your-secret-key-change-this-in-production';
+    return jwt.sign(payload, secret, { expiresIn: '7d' });
   }
 
-  generateToken(payload: object): string {
-    // TODO: Implement in Phase-2
-    throw new Error('Not implemented');
-  }
-
-  verifyToken(token: string): any {
-    // TODO: Implement in Phase-2
-    throw new Error('Not implemented');
-  }
-
-  decodeToken(token: string): any {
-    // TODO: Implement in Phase-2
-    throw new Error('Not implemented');
+  static verify(token: string): any {
+    const secret = process.env.JWT_SECRET || 'your-secret-key-change-this-in-production';
+    try {
+      return jwt.verify(token, secret);
+    } catch (error) {
+      throw new AppError('Invalid or expired token', 401);
+    }
   }
 }

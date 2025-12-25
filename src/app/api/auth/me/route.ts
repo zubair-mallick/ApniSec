@@ -6,10 +6,13 @@ import { JwtUtil } from '@/backend/utils/JwtUtil';
 import { EmailUtil } from '@/backend/utils/EmailUtil';
 import { AuthValidator } from '@/backend/validators/AuthValidator';
 import { RateLimiter } from '@/backend/utils/RateLimiter';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
-  const userRepository = new UserRepository();
-  const authService = new AuthService(userRepository, new JwtUtil(), new EmailUtil());
+  const userRepository = new UserRepository(prisma);
+  const authService = new AuthService(userRepository, new JwtUtil(), EmailUtil);
   const authValidator = new AuthValidator();
   const rateLimiter = new RateLimiter();
   const authHandler = new AuthHandler(authService, authValidator, rateLimiter);
