@@ -7,7 +7,7 @@ export function createMockRequest(
   headers: Record<string, string> = {}
 ): NextRequest {
   const url = 'http://localhost:3000/api/test'
-  const init: RequestInit = {
+  const init = {
     method,
     headers: {
       'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ export function createMockRequest(
     init.body = JSON.stringify(body)
   }
 
-  return new NextRequest(url, init)
+  return new NextRequest(url, init as RequestInit)
 }
 
 // Helper to extract JSON from NextResponse
