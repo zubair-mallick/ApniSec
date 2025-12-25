@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Navbar from "@/components/layout/Navbar";
+import Button from "@/components/ui/Button";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -29,10 +32,7 @@ export default function LoginPage() {
         return;
       }
 
-      // Store token in localStorage
       localStorage.setItem("token", data.data.token);
-      
-      // Redirect to dashboard
       router.push("/dashboard");
     } catch (err: any) {
       setError(err.message || "Something went wrong");
@@ -42,56 +42,127 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-md">
-        <h1 className="text-3xl font-bold mb-6 text-center">Login to ApniSec</h1>
-        
-        {error && (
-          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-            {error}
+    <div className="min-h-screen bg-cyber-dark cyber-grid">
+      <Navbar />
+      <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] pt-16 px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-md">
+          <div className="glass-strong p-8 md:p-10 rounded-2xl border border-cyber-green/30 glow-green animate-fade-in">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-cyan-500 to-green-500 rounded-xl mb-4">
+                <span className="text-black text-2xl font-bold">A</span>
+              </div>
+              <h1 className="text-3xl font-bold text-white mb-2">
+                Welcome Back
+              </h1>
+              <p className="text-gray-400">
+                Sign in to your ApniSec account
+              </p>
+            </div>
+
+            {/* Error Message */}
+            {error && (
+              <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 text-red-400 rounded-lg animate-fade-in">
+                <div className="flex items-center gap-2">
+                  <span>⚠️</span>
+                  <span className="text-sm">{error}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-300 mb-2"
+                >
+                  Email Address
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 bg-cyber-gray border border-cyber-gray-light rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyber-green focus:ring-2 focus:ring-cyber-green/20 transition-all"
+                  placeholder="your@email.com"
+                  required
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-300 mb-2"
+                >
+                  Password
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 bg-cyber-gray border border-cyber-gray-light rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyber-green focus:ring-2 focus:ring-cyber-green/20 transition-all"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+
+              <div className="flex items-center justify-between text-sm">
+                <label className="flex items-center gap-2 text-gray-400">
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4 rounded bg-cyber-gray border-cyber-gray-light text-cyber-green focus:ring-cyber-green"
+                  />
+                  <span>Remember me</span>
+                </label>
+                <Link
+                  href="#"
+                  className="text-cyber-green hover:text-cyber-cyan transition-colors"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+
+              <Button
+                type="submit"
+                variant="primary"
+                className="w-full"
+                disabled={loading}
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></span>
+                    Signing in...
+                  </span>
+                ) : (
+                  "Sign In"
+                )}
+              </Button>
+            </form>
+
+            {/* Sign Up Link */}
+            <div className="mt-6 text-center">
+              <p className="text-gray-400 text-sm">
+                Don't have an account?{" "}
+                <Link
+                  href="/register"
+                  className="text-cyber-green hover:text-cyber-cyan font-semibold transition-colors"
+                >
+                  Create one now
+                </Link>
+              </p>
+            </div>
+
+            {/* Security Badge */}
+            <div className="mt-8 pt-6 border-t border-cyber-green/10 text-center">
+              <div className="inline-flex items-center gap-2 text-xs text-gray-500">
+                <span>🔒</span>
+                <span>Your data is encrypted and secure</span>
+              </div>
+            </div>
           </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="your@email.com"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="••••••••"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-          >
-            {loading ? "Logging in..." : "Login"}
-          </button>
-        </form>
-
-        <p className="mt-4 text-center text-sm text-gray-600">
-          Don't have an account?{" "}
-          <a href="/register" className="text-blue-600 hover:underline">
-            Register here
-          </a>
-        </p>
+        </div>
       </div>
     </div>
   );
